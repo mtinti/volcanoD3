@@ -1,6 +1,6 @@
 function volcanoPlot(chartId) {
-    var width = 960,
-        height = 500,
+    var width = 400,
+        height = 400,
         margin = {top: 20, right: 20, bottom: 40, left: 50},
         xColumn, // name of the variable to be plotted on the axis
         yColumn,
@@ -37,10 +37,10 @@ function volcanoPlot(chartId) {
             // have -log10 scale without having to do extra parsing
             var ylimits = d3.extent(data, function(d) { return d[yColumn]; });
             //console.log('innerHeight',d3.extent(data, function(d) { return d[yColumn]; }))
-            //console.log('ylimits',ylimits)
+            //console.log('ylimits',ylimits,'chartId',chartId)
 
             yScale.range([innerHeight, 0])
-                .domain([ylimits[0],ylimits[1]+yAxisLabelOffset])
+                .domain([ylimits[0]-(ylimits[0]*0.01),ylimits[1]+(ylimits[1]*0.01)])
                 .nice(); // adds "padding" so the domain extent is exactly the min and max values
             //console.log('innerHeight',d3.extent(data, function(d) { return d[yColumn]; }))
 

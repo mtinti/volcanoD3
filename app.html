@@ -15,22 +15,40 @@
  
     <div class="container">
         <div class="row">
+
             <div class="col">
-                <button id="resetBtn1">Reset</button>
-                <div id="chart1"></div>
+                
+                <div id="chart1">
+                    <button id="resetBtn1">Reset</button>
+                </div>
             </div>
+
+            
             <div class="col">
-                <button id="resetBtn2">Reset</button>
-                <div id="chart2"></div>
-            </div>     
+                
+                
+                <div id="chart2">
+                    <button id="resetBtn2">Reset</button>
+                </div>     
+            </div>  
+            
+            
         </div>
         <br>
         <div class="row">
 
-            <div class="col">
-                <table id='table1' class="display"> </table>
+
+            <div id="chart3">
+                <button id="resetBtn3">Reset</button>
             </div>  
- 
+            <div class="col"></div>
+
+            <div class="col">
+                <table id='table1' class="display" > </table>
+            </div>             
+
+
+            </div>  
         </div>
 
 
@@ -65,17 +83,32 @@
         .data(data)
         .enter()
         .append('tr')
+        //.on("mouseover", function(d,i) {
+        // make the row red
+        //d3.select(this).style("background-color","red");
+        // find your path and transition
+        //var path = paths[0][i];
+        //d3.select(path).transition().duration(100).attr("d", arcOver);
+        //console.log('mousein', this.data(function(d) { return d  }) ) }
+        //)
+        //.on("mouseout",function(d,i){
+            //d3.select(this).style("background-color","transparent");
+            //var path = paths[0][i];
+            //d3.select(path).transition().duration(100).attr("d", arc);
+        
+        //});
         
         var cells = rows.selectAll('td')
         .data(function(row) {
-	    	return columns.map(function (column) {
-	    		return { column: column, value: row[column] }
-	      })
-      })
-      .enter()
-      .append('td')
-      .text(function (d) { return d.value })
-      return table;
+            return columns.map(function (column) {
+                return { column: column, value: row[column] }
+            })
+        })
+        .enter()
+        .append('td')
+        .text(function (d) { return d.value })
+        
+        return table;
     }
 
     var volcanoPlot_1 = volcanoPlot("1")
@@ -86,7 +119,7 @@
         .sampleID("Gene_id")
         .xColumn("srank")
         .yColumn("log_FDR")
-        .yAxisLabelOffset(0.1)
+        //.yAxisLabelOffset(0.1)
         .height(400)
         .width(400);
 
@@ -98,10 +131,23 @@
         .sampleID("Gene_id")
         .xColumn("srank")
         .yColumn("BSF_rank2")
-        .yAxisLabelOffset(-100)
+        //.yAxisLabelOffset(-100)
         .height(400)
         .width(400);
-        
+    
+    var volcanoPlot_3 = volcanoPlot("3")
+        .xAxisLabel('Log10 Intensity')
+        .yAxisLabel('Exp Rank')
+        .foldChangeThreshold(50)
+        .significanceThreshold(8)
+        .sampleID("Gene_id")
+        .xColumn("srank")
+        .yColumn("Log_Intensity")
+        //.AxisLabelOffset(-100)
+        //.yAxisLabelOffset(-200)
+        .height(400)
+        .width(400);    
+
     d3.csv(file, parser, function(error, data){
         if (error) console.log(error);
 
@@ -110,6 +156,9 @@
         
         var plot_2 = d3.select('#chart2');
         plot_2.data([data]).call(volcanoPlot_2);
+
+        var plot_3 = d3.select('#chart3');
+        plot_3.data([data]).call(volcanoPlot_3);
 
 
         var columns = ['Gene_id','srank','log_FDR','BSF_rank2','desc2', 'Gene_acc']
@@ -135,17 +184,50 @@
             { data: "Gene_acc", title: 'Gene Selector', "visible": false}
         ],});
         
-        $('#table1 tbody').on('click', 'tr', function () {
-            console.log('click');
+        $('#table1 tbody').on('mouseover', 'tr', function () {
+            //console.log('click');
             var data = table.row( this ).data();
             //alert( 'You clicked on '+data[0]+'\'s row' );
             console.log(data);
             var gene_acc = data['Gene_acc']
             var selector = '#prot_1_'+gene_acc;
-            console.log('d3',d3.select(selector).attr("r", "10"));
+            d3.select(selector).attr("r", "10");
+            d3.select(selector).html('pippo')
+            var selector = '#prot_2_'+gene_acc;
+            d3.select(selector).attr("r", "10");
+            var selector = '#prot_3_'+gene_acc;
+            d3.select(selector).attr("r", "10"); 
+            
+            //$(selector).tooltip( "option", "content", "TOOLTIP CONTENT" ,'visible','true');
+            //d3.select(selector).select(function() {console.log('this',d3.select(this).html('pippo'));});   
+            //d3.select(selector).select(function() {return d3.select(this).html('pippo')})
+            //$( selector ).html( "All new content");
+
+
+
+
 
         } );
-        
+        $('#table1 tbody').on('mouseout', 'tr', function () {
+            //console.log('click');
+            var data = table.row( this ).data();
+            //alert( 'You clicked on '+data[0]+'\'s row' );
+            //console.log(data);
+            var gene_acc = data['Gene_acc']
+            var selector = '#prot_1_'+gene_acc;
+            d3.select(selector).attr("r", "3");
+            var selector = '#prot_2_'+gene_acc;
+            d3.select(selector).attr("r", "3");
+            var selector = '#prot_3_'+gene_acc;
+            d3.select(selector).attr("r", "3");
+
+        } );
+
+
+
+        //console.log('tabe',d3.selectAll('#table1 tbody tr').enter().on('mouseenter', console.log('pippo')))
+        //.on('mouseenter', console.log('pippo'))
+
 
         
     });

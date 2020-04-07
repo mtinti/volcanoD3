@@ -101,3 +101,9 @@ body {
     color: #000;
     cursor: pointer;
 }
+
+th { font-size: 12px; }
+td { font-size: 10px; }
+label { font-size: 10px; }
+.dataTables_info {font-size: 12px;}
+.dataTables_paginate {font-size: 12px;}
