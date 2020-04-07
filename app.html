@@ -161,7 +161,7 @@
         plot_3.data([data]).call(volcanoPlot_3);
 
 
-        var columns = ['Gene_id','srank','log_FDR','BSF_rank2','desc2', 'Gene_acc']
+        var columns = ['Gene_id', 'srank', 'log_FDR', 'BSF_rank2', 'desc2', 'Gene_acc']
         tabulate(data, columns)
 
         
@@ -202,10 +202,6 @@
             //d3.select(selector).select(function() {console.log('this',d3.select(this).html('pippo'));});   
             //d3.select(selector).select(function() {return d3.select(this).html('pippo')})
             //$( selector ).html( "All new content");
-
-
-
-
 
         } );
         $('#table1 tbody').on('mouseout', 'tr', function () {
