@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>Zoomable Volcano Plot with Tooltips in D3 v4</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.css" >
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700" >
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" >
+    <link rel="stylesheet" href="volcano.css">
+</head>
+<body>
+
+ 
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <button id="resetBtn1">Reset</button>
+                <div id="chart1"></div>
+            </div>
+            <div class="col">
+                <button id="resetBtn2">Reset</button>
+                <div id="chart2"></div>
+            </div>     
+        </div>
+        <br>
+        <div class="row">
+
+            <div class="col">
+                <table id='table1' class="display"> </table>
+            </div>  
+ 
+        </div>
+
+
+    </div>
+
+    
+ 
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>  
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script> 
+ 
+    <script src="volcano.js"></script>
+
+<script>
+    var file = "Dataset.csv";
+
+    var tabulate = function (data, columns) {
+        var table = d3.select('#table1')//.append('table')
+        var thead = table.append('thead')
+        var tbody = table.append('tbody')
+        
+        thead.append('tr')
+        .selectAll('th')
+	    .data(columns)
+        .enter()
+        .append('th')
+        .text(function (d) { return d })
+        
+        var rows = tbody.selectAll('tr')
+        .data(data)
+        .enter()
+        .append('tr')
+        
+        var cells = rows.selectAll('td')
+        .data(function(row) {
+	    	return columns.map(function (column) {
+	    		return { column: column, value: row[column] }
+	      })
+      })
+      .enter()
+      .append('td')
+      .text(function (d) { return d.value })
+      return table;
+    }
+
+    var volcanoPlot_1 = volcanoPlot("1")
+        .xAxisLabel('Exp Rank')
+        .yAxisLabel('False Discovery Rate')
+        .foldChangeThreshold(50)
+        .significanceThreshold(0.5)
+        .sampleID("Gene_id")
+        .xColumn("srank")
+        .yColumn("log_FDR")
+        .yAxisLabelOffset(0.1)
+        .height(400)
+        .width(400);
+
+    var volcanoPlot_2 = volcanoPlot("2")
+        .xAxisLabel('Exp Rank')
+        .yAxisLabel('BSF Intensity Rank')
+        .foldChangeThreshold(50)
+        .significanceThreshold(6000)
+        .sampleID("Gene_id")
+        .xColumn("srank")
+        .yColumn("BSF_rank2")
+        .yAxisLabelOffset(-100)
+        .height(400)
+        .width(400);
+        
+    d3.csv(file, parser, function(error, data){
+        if (error) console.log(error);
+
+        var plot_1 = d3.select('#chart1');
+        plot_1.data([data]).call(volcanoPlot_1); 
+        
+        var plot_2 = d3.select('#chart2');
+        plot_2.data([data]).call(volcanoPlot_2);
+
+
+        var columns = ['Gene_id','srank','log_FDR','BSF_rank2','desc2', 'Gene_acc']
+        tabulate(data, columns)
+
+        
+        var table = $('#table1').DataTable({
+        
+        dom: "Bfrtip",
+        pageLength: 10,
+
+        filter: true,
+        columns: [
+
+            { name: "Gene_id", title: 'Gene Ids'},
+            { data: "srank", title: 'Exp Rank', 
+            render: $.fn.dataTable.render.number( '', '.', 2) },
+            { data: "log_FDR" , title: 'False Discovery Rate', 
+            render: $.fn.dataTable.render.number( '', '.', 2)},
+            { data: "BSF_rank2" , title: 'BSF Intensity Rank', 
+            render: $.fn.dataTable.render.number( '', '.', 1)},
+            { data: "desc2" , title: 'Description'},
+            { data: "Gene_acc", title: 'Gene Selector', "visible": false}
+        ],});
+        
+        $('#table1 tbody').on('click', 'tr', function () {
+            console.log('click');
+            var data = table.row( this ).data();
+            //alert( 'You clicked on '+data[0]+'\'s row' );
+            console.log(data);
+            var gene_acc = data['Gene_acc']
+            var selector = '#prot_1_'+gene_acc;
+            console.log('d3',d3.select(selector).attr("r", "10"));
+
+        } );
+        
+
+        
+    });
+
+
+    var editor;
+    
+    $(document).ready(function() {
+        
+
+    
+    } );
+
+    //d3.select(selector).attr("r", "10")
+
+
+
+
+    // row parser to convert key values into numbers if possible
+    function parser(d) {
+        for (var key in d) {
+            if (d.hasOwnProperty(key)) {
+                d[key] = numberParser(d[key]);
+            }
+        }
+        return d;
+    }
+
+    // function to turn string into number if possible
+    function numberParser(value){
+        return (+value) ? +value : value;
+    }
+
+	
+
+
+</script>
+
+</body>
+</html>
