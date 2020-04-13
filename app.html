@@ -60,18 +60,28 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" ></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" ></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>   
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script> 
  
     <script src="volcano.js"></script>
 
 <script>
     var file = "Dataset.csv";
+    
+    table_tip = d3.tip()
+        .attr('class', 'd3-tip')
+        
+        .offset([-10, 0])
+        .html(function (d) { d['desc2'] });
 
     var tabulate = function (data, columns) {
         var table = d3.select('#table1')//.append('table')
         var thead = table.append('thead')
         var tbody = table.append('tbody')
-        
+   
+
+
+
         thead.append('tr')
         .selectAll('th')
 	    .data(columns)
@@ -83,7 +93,29 @@
         .data(data)
         .enter()
         .append('tr')
-        //.on("mouseover", function(d,i) {
+        .on("mouseover", function(d, i) {
+            
+
+            //(d, i, n) => table_tip.show(d, n[i],
+            //console.log('pippo',d,i,n))
+            //console.log('this',this);
+            //console.log('d_',d[0])
+            
+            //console.log('i enter',i);
+            //'prot_1_'+d['Gene_acc']
+            //console.log('d enter',d);
+
+            //table_tip.show(d, document.getElementById("selection_tip_1_"+i))
+            //console.log("selection_tip_1_"+i);
+            //temp_tip = d3.select("selection_tip_1_"+i);
+            //console.log('temp_tip',temp_tip);
+            
+
+            //var selector = '#prot_1_'+i;
+            //d3.select(selector).attr("r", "100");
+
+
+        })
         // make the row red
         //d3.select(this).style("background-color","red");
         // find your path and transition
@@ -91,7 +123,11 @@
         //d3.select(path).transition().duration(100).attr("d", arcOver);
         //console.log('mousein', this.data(function(d) { return d  }) ) }
         //)
-        //.on("mouseout",function(d,i){
+        .on("mouseout",function(d,i){
+            //console.log('i exit',i);
+            //console.log('d exit',d);
+
+        })
             //d3.select(this).style("background-color","transparent");
             //var path = paths[0][i];
             //d3.select(path).transition().duration(100).attr("d", arc);
@@ -149,6 +185,10 @@
         .width(400);    
 
     d3.csv(file, parser, function(error, data){
+
+
+        
+
         if (error) console.log(error);
 
         var plot_1 = d3.select('#chart1');
@@ -184,11 +224,13 @@
             { data: "Gene_acc", title: 'Gene Selector', "visible": false}
         ],});
         
+        
+
         $('#table1 tbody').on('mouseover', 'tr', function () {
             //console.log('click');
             var data = table.row( this ).data();
             //alert( 'You clicked on '+data[0]+'\'s row' );
-            console.log(data);
+            //console.log(data);
             var gene_acc = data['Gene_acc']
             var selector = '#prot_1_'+gene_acc;
             d3.select(selector).attr("r", "10");
@@ -196,14 +238,25 @@
             var selector = '#prot_2_'+gene_acc;
             d3.select(selector).attr("r", "10");
             var selector = '#prot_3_'+gene_acc;
-            d3.select(selector).attr("r", "10"); 
+            d3.select(selector).attr("r", "10");
+
+            //selector = 'selection_tip_1_'+gene_acc
+            //console.log('d3.select(selector)',d3.select(selector))
+            //$(selector).attr("visibility", "visible");
+            //$(selector).append("div").html('PIPPO');
+            //.attr("style", "width:90%; background-color:blue; height: 150px");; 
             
-            //$(selector).tooltip( "option", "content", "TOOLTIP CONTENT" ,'visible','true');
+            //$(selector).tooltip( 'visible','true');
             //d3.select(selector).select(function() {console.log('this',d3.select(this).html('pippo'));});   
             //d3.select(selector).select(function() {return d3.select(this).html('pippo')})
             //$( selector ).html( "All new content");
 
         } );
+        //var tooltip = d3.selectAll('tr')
+                //.append("div")
+                //.attr('class', 'tooltip');
+
+        
         $('#table1 tbody').on('mouseout', 'tr', function () {
             //console.log('click');
             var data = table.row( this ).data();

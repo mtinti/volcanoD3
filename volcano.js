@@ -69,6 +69,8 @@ function volcanoPlot(chartId) {
               .append('rect')
                 .attr('height', innerHeight)
                 .attr('width', innerWidth);
+            
+            //svg.append("text").text("My text")
 
             // add the axes
             var xAxis = d3.axisBottom(xScale);
@@ -120,7 +122,25 @@ function volcanoPlot(chartId) {
                 .on("mousemove", tipMove)
                 .on('mouseleave', function(d) {
                    return tooltip.style('visibility', 'hidden');
-                });
+                })
+             
+            //var text = svg.selectAll("text")
+            //.data(data).enter().append('text')
+            
+            //var textLabel = text
+            //.attr('x', function(d) { return xScale(d[xColumn]); })
+            //.attr('y', function(d) { return yScale(d[yColumn]); })
+            //.text( function (d) { return "( " + xScale(d[xColumn]) + ", " + yScale(d[yColumn]) +" )"; })
+            //.attr("font-family", "sans-serif")
+            //.attr("visibility", "hidden")
+            //;
+            //.attr("font-family", "sans-serif")
+            //.attr("visibility", "hidden")
+            //.on('mouseenter', function (d){ this.attr("visibility", "")})
+            //;
+            //circles.selectAll(".dot")
+            //    .data(data)
+            //    .enter().append("text").text("My text");
 
             var thresholdLines = svg.append('g')
                 .attr('class', 'thresholdLines');
@@ -144,8 +164,13 @@ function volcanoPlot(chartId) {
             });
 
             var tooltip = d3.select("body")
+                .data(data).enter()
                 .append("div")
-                .attr('class', 'tooltip');
+                .attr('class', 'tooltip')
+                
+                .attr('id', function(i, d) {
+                    return "selection_tip_" + chartId + "_"+i['Gene_acc']
+                } );
 
             function tipEnter(d) {
                 tooltip.style('visibility', 'visible')
@@ -172,7 +197,7 @@ function volcanoPlot(chartId) {
 
             function zoomFunction() {
                 var transform = d3.zoomTransform(this);
-                console.log('zoom this', this)
+                //console.log('zoom this', this)
                 d3.select('#chart'+chartId).selectAll('.dot')
                     .attr('transform', transform)
                     .attr('r', 3 / Math.sqrt(transform.k));
