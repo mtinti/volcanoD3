@@ -68,20 +68,17 @@
 <script>
     var file = "Dataset.csv";
     
-    table_tip = d3.tip()
-        .attr('class', 'd3-tip')
+    //table_tip = d3.tip()
+    //   .attr('class', 'd3-tip')
         
-        .offset([-10, 0])
-        .html(function (d) { d['desc2'] });
+    //    .offset([-10, 0])
+    //    .html(function (d) { d['desc2'] });
 
     var tabulate = function (data, columns) {
         var table = d3.select('#table1')//.append('table')
         var thead = table.append('thead')
         var tbody = table.append('tbody')
    
-
-
-
         thead.append('tr')
         .selectAll('th')
 	    .data(columns)
@@ -93,7 +90,7 @@
         .data(data)
         .enter()
         .append('tr')
-        .on("mouseover", function(d, i) {
+        //.on("mouseover", function(d, i) {
             
 
             //(d, i, n) => table_tip.show(d, n[i],
@@ -115,7 +112,7 @@
             //d3.select(selector).attr("r", "100");
 
 
-        })
+        //})
         // make the row red
         //d3.select(this).style("background-color","red");
         // find your path and transition
@@ -123,11 +120,11 @@
         //d3.select(path).transition().duration(100).attr("d", arcOver);
         //console.log('mousein', this.data(function(d) { return d  }) ) }
         //)
-        .on("mouseout",function(d,i){
+        //.on("mouseout",function(d,i){
             //console.log('i exit',i);
             //console.log('d exit',d);
 
-        })
+        //})
             //d3.select(this).style("background-color","transparent");
             //var path = paths[0][i];
             //d3.select(path).transition().duration(100).attr("d", arc);
