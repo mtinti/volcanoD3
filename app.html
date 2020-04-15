@@ -35,21 +35,22 @@
                     <div id="chart2"></div>   
                     <button id="resetBtn2">Reset</button>
                 </div>  
-            </div>  
-            
-            
-        </div>
-        <br>
-        <div class="row">
+            </div> 
+
             <div class="col">
                 <h2>MA Plot</h2>
                 <div class="card">
                     <div id="chart3"></div> 
                     <button id="resetBtn3">Reset</button>
                 </div>
-           </div>
+           </div>   
+            
+        </div>
+        <br>
+        <div class="row">
 
-            <div class="col">
+
+            <div class="col-8">
                 <h2>Identified Proteins</h2>
                 <div class="card">
                 <table id='table1' class="display" > </table>
@@ -74,7 +75,7 @@
     <script src="volcano.js"></script>
 
 <script>
-    var file = "Dataset.csv";
+    var file = "Dataset_min.csv";
     
     //table_tip = d3.tip()
     //   .attr('class', 'd3-tip')
@@ -161,8 +162,8 @@
         .xColumn("srank")
         .yColumn("log_FDR")
         //.yAxisLabelOffset(0.1)
-        .height(400)
-        .width(400);
+        .height(300)
+        .width(300);
 
     var volcanoPlot_2 = volcanoPlot("2")
         .xAxisLabel('Exp Rank')
@@ -173,12 +174,12 @@
         .xColumn("srank")
         .yColumn("BSF_rank2")
         //.yAxisLabelOffset(-100)
-        .height(400)
-        .width(400);
+        .height(300)
+        .width(300);
     
     var volcanoPlot_3 = volcanoPlot("3")
-        .xAxisLabel('Log10 Intensity')
-        .yAxisLabel('Exp Rank')
+        .xAxisLabel('Exp Rank')
+        .yAxisLabel('Log10 Intensity')
         .foldChangeThreshold(50)
         .significanceThreshold(8)
         .sampleID("Gene_id")
@@ -186,8 +187,8 @@
         .yColumn("Log_Intensity")
         //.AxisLabelOffset(-100)
         //.yAxisLabelOffset(-200)
-        .height(400)
-        .width(400);    
+        .height(300)
+        .width(300);    
 
     d3.csv(file, parser, function(error, data){
 
@@ -218,12 +219,12 @@
         filter: true,
         columns: [
 
-            { name: "Gene_id", title: 'Gene Ids'},
-            { data: "srank", title: 'Exp Rank', 
+            { name: "Gene_id", title: 'Ids'},
+            { data: "srank", title: 'Rank', 
             render: $.fn.dataTable.render.number( '', '.', 2) },
-            { data: "log_FDR" , title: 'False Discovery Rate', 
+            { data: "log_FDR" , title: 'FDR', 
             render: $.fn.dataTable.render.number( '', '.', 2)},
-            { data: "BSF_rank2" , title: 'BSF Intensity Rank', 
+            { data: "BSF_rank2" , title: 'Intensity', 
             render: $.fn.dataTable.render.number( '', '.', 1)},
             { data: "desc2" , title: 'Description'},
             { data: "Gene_acc", title: 'Gene Selector', "visible": false}
