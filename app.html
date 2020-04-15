@@ -141,46 +141,6 @@
         .data(data)
         .enter()
         .append('tr')
-        //.on("mouseover", function(d, i) {
-            
-
-            //(d, i, n) => table_tip.show(d, n[i],
-            //console.log('pippo',d,i,n))
-            //console.log('this',this);
-            //console.log('d_',d[0])
-            
-            //console.log('i enter',i);
-            //'prot_1_'+d['Gene_acc']
-            //console.log('d enter',d);
-
-            //table_tip.show(d, document.getElementById("selection_tip_1_"+i))
-            //console.log("selection_tip_1_"+i);
-            //temp_tip = d3.select("selection_tip_1_"+i);
-            //console.log('temp_tip',temp_tip);
-            
-
-            //var selector = '#prot_1_'+i;
-            //d3.select(selector).attr("r", "100");
-
-
-        //})
-        // make the row red
-        //d3.select(this).style("background-color","red");
-        // find your path and transition
-        //var path = paths[0][i];
-        //d3.select(path).transition().duration(100).attr("d", arcOver);
-        //console.log('mousein', this.data(function(d) { return d  }) ) }
-        //)
-        //.on("mouseout",function(d,i){
-            //console.log('i exit',i);
-            //console.log('d exit',d);
-
-        //})
-            //d3.select(this).style("background-color","transparent");
-            //var path = paths[0][i];
-            //d3.select(path).transition().duration(100).attr("d", arc);
-        
-        //});
         
         var cells = rows.selectAll('td')
         .data(function(row) {
@@ -281,18 +241,21 @@
 
 
             show_name = function(selector, plot_id){
+                //select the circle
                 circle = d3.select(selector); 
+                //select the circle parent to append text
+                //if text inside circle it won't show
                 g_parent = circle.select(function() { return this.parentNode; })
-                g = circle.select(function() { return this; })
-                //console.log('g.attr("cx")',g.attr("cx"))
-                //console.log('g.attr("cx")',g.attr("cy"))
+
                 g_parent.append("text")
-                .attr("x", g.attr("cx") )
-                .attr("y", g.attr("cy") )
+                .attr("x", circle.attr("cx") )
+                .attr("y", circle.attr("cy") )
                 .attr("id", "t_"+plot_id +'_'+ data['Gene_acc'])
-                .style("z-index", 100)
+                .attr("classe", "prot_name")
                 .style("text-anchor", "left")
                 .text(data['desc2'])
+                .style("font-size", "12px")
+                .style("z-order", 100)
             }
 
             //console.log('click');
@@ -381,11 +344,7 @@
         };
     }(jQuery));
     
-    $(document).ready(function() {
-        
-        $("#spinner").invisible();
-    
-    } );
+
 
     //d3.select(selector).attr("r", "10")
 
@@ -408,7 +367,11 @@
     }
 
 	
-
+    $(document).ready(function() {
+        
+        $("#spinner").invisible();
+    
+    } );
 
 </script>
 
