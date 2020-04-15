@@ -13,58 +13,94 @@
 <body>
 
     <div class="container">
-        <div class="jumbotron">
-            <h1>The TbPIG-A inteaction network</h1>
-        </div> 
-      
+
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+            <a class="navbar-brand" href="#">The TbPIG-A inteaction network</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="#"> <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#"></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link disabled" href="#"></a>
+                </li>
+              </ul>
+              <form class="form-inline mt-2 mt-md-0">
+                <input class="form-control mr-sm-2" id="searchbox" type="text" placeholder="Search" aria-label="Search">
+                
+              </form>
+            </div>
+          </nav>
 
     
         <div class="row">
-            <div class="col">
-                <h2>Volcano Plot</h2>
-                <div class="card">
-                    <div id="chart1"></div>
-                    <button id="resetBtn1">Reset</button>
+
+            <div class="col-5">
+   
+                <ul class="nav nav-tabs col-12">
+                    <li class="nav-item">
+                        <a href="#home" class="nav-link active" data-toggle="tab">Volcano Plot</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#profile" class="nav-link" data-toggle="tab">Intensity Plot</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#messages" class="nav-link" data-toggle="tab">MA Plot</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content col-12">
+                    <br>
+                    <div class="tab-pane fade show active" id="home">
+                        <div class="card">
+                            <div id="chart1"></div>
+                            <button id="resetBtn1">Reset</button>            
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="profile"> 
+                        <br>
+                            <div class="card">
+                                <div id="chart2"></div>
+                                <button id="resetBtn2">Reset</button>            
+                            </div>
+                    </div>
+
+
+                    <div class="tab-pane fade" id="messages">
+                        <br>
+                        <div class="card">
+                            <div id="chart3"></div>
+                            <button id="resetBtn3">Reset</button>            
+                        </div>
+                    </div>
+                        
                 </div>
+
             </div>
-
-            
-            <div class="col">
-                <h2>Intensity Plot</h2>
-                <div class="card">
-                    <div id="chart2"></div>   
-                    <button id="resetBtn2">Reset</button>
-                </div>  
-            </div> 
-
-            <div class="col">
-                <h2>MA Plot</h2>
-                <div class="card">
-                    <div id="chart3"></div> 
-                    <button id="resetBtn3">Reset</button>
-                </div>
-           </div>   
-            
-        </div>
-        <br>
-        <div class="row">
-
-
-            <div class="col-8">
+                     
+        
+            <div class="col-7">
                 <h2>Identified Proteins</h2>
                 <div class="card">
-                <table id='table1' class="display" > </table>
-                </div>
-            </div>             
+                <table id='table1' class="display" > </table>    
+            </div>
 
 
-         
-        </div>
-
+        </div>    
 
     </div>
-
+         
     
+
+
+
  
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" ></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" ></script>
@@ -162,8 +198,8 @@
         .xColumn("srank")
         .yColumn("log_FDR")
         //.yAxisLabelOffset(0.1)
-        .height(300)
-        .width(300);
+        .height(400)
+        .width(400);
 
     var volcanoPlot_2 = volcanoPlot("2")
         .xAxisLabel('Exp Rank')
@@ -174,8 +210,8 @@
         .xColumn("srank")
         .yColumn("BSF_rank2")
         //.yAxisLabelOffset(-100)
-        .height(300)
-        .width(300);
+        .height(400)
+        .width(400);
     
     var volcanoPlot_3 = volcanoPlot("3")
         .xAxisLabel('Exp Rank')
@@ -187,13 +223,10 @@
         .yColumn("Log_Intensity")
         //.AxisLabelOffset(-100)
         //.yAxisLabelOffset(-200)
-        .height(300)
-        .width(300);    
+        .height(400)
+        .width(400);    
 
     d3.csv(file, parser, function(error, data){
-
-
-        
 
         if (error) console.log(error);
 
@@ -213,9 +246,9 @@
         
         var table = $('#table1').DataTable({
         
-        dom: "Bfrtip",
+        //dom: "Bfrtip",
+        dom: "lrtp",
         pageLength: 10,
-
         filter: true,
         columns: [
 
@@ -230,7 +263,9 @@
             { data: "Gene_acc", title: 'Gene Selector', "visible": false}
         ],});
         
-        
+        $("#searchbox").keyup(function() {
+            table.search(this.value).draw();
+        }); 
 
         $('#table1 tbody').on('mouseover', 'tr', function () {
             //console.log('click');
