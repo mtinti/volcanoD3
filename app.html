@@ -232,6 +232,7 @@
         .height(400)
         .width(400);    
 
+    console.log('volcanoPlot_3',volcanoPlot_3)
     d3.csv(file, parser, function(error, data){
 
         if (error) console.log(error);
@@ -273,7 +274,27 @@
             table.search(this.value).draw();
         }); 
 
+
+
+
         $('#table1 tbody').on('mouseover', 'tr', function () {
+
+
+            show_name = function(selector, plot_id){
+                circle = d3.select(selector); 
+                g_parent = circle.select(function() { return this.parentNode; })
+                g = circle.select(function() { return this; })
+                //console.log('g.attr("cx")',g.attr("cx"))
+                //console.log('g.attr("cx")',g.attr("cy"))
+                g_parent.append("text")
+                .attr("x", g.attr("cx") )
+                .attr("y", g.attr("cy") )
+                .attr("id", "t_"+plot_id +'_'+ data['Gene_acc'])
+                .style("z-index", 100)
+                .style("text-anchor", "left")
+                .text(data['desc2'])
+            }
+
             //console.log('click');
             var data = table.row( this ).data();
             //alert( 'You clicked on '+data[0]+'\'s row' );
@@ -281,11 +302,17 @@
             var gene_acc = data['Gene_acc']
             var selector = '#prot_1_'+gene_acc;
             d3.select(selector).attr("r", "10");
-            //d3.select(selector).html('pippo')
+            show_name(selector, 1)
+
             var selector = '#prot_2_'+gene_acc;
             d3.select(selector).attr("r", "10");
+            show_name(selector, 2)
+
             var selector = '#prot_3_'+gene_acc;
             d3.select(selector).attr("r", "10");
+            show_name(selector, 3)
+
+
 
             //selector = 'selection_tip_1_'+gene_acc
             //console.log('d3.select(selector)',d3.select(selector))
@@ -310,12 +337,22 @@
             //alert( 'You clicked on '+data[0]+'\'s row' );
             //console.log(data);
             var gene_acc = data['Gene_acc']
+
+            
             var selector = '#prot_1_'+gene_acc;
             d3.select(selector).attr("r", "3");
+
             var selector = '#prot_2_'+gene_acc;
             d3.select(selector).attr("r", "3");
+
+
             var selector = '#prot_3_'+gene_acc;
             d3.select(selector).attr("r", "3");
+
+
+            d3.select("#t_1_"+data['Gene_acc']).remove();
+            d3.select("#t_2_"+data['Gene_acc']).remove();
+            d3.select("#t_3_"+data['Gene_acc']).remove();
 
         } );
 

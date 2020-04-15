@@ -54,7 +54,7 @@ function volcanoPlot(chartId) {
             var svg = d3.select(this).append('svg')
                 .attr('height', height)
                 .attr('width', width)
-              .append('g')
+                .append('g')
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
                 .call(zoom);
 
@@ -121,8 +121,10 @@ function volcanoPlot(chartId) {
                 .on('mouseenter', tipEnter)
                 .on("mousemove", tipMove)
                 .on('mouseleave', function(d) {
+                   //d3.select("#t"+d['Gene_acc']).remove();
                    return tooltip.style('visibility', 'hidden');
                 })
+            
              
             //var text = svg.selectAll("text")
             //.data(data).enter().append('text')
@@ -173,6 +175,14 @@ function volcanoPlot(chartId) {
                 } );
 
             function tipEnter(d) {
+
+                //svg.append("text")
+                //.attr("x", function(d) { return d[xColumn]; })
+                //.attr("y", function(d) { return d[yColumn]; })
+                //.attr("id", "t" + d['Gene_acc'])
+                //.style("text-anchor", "middle")
+                //.text(d['desc2']);
+
                 tooltip.style('visibility', 'visible')
                     .style('font-size', '11px')
                     .html(
@@ -316,3 +326,4 @@ function volcanoPlot(chartId) {
 
     return chart;
 }
+
