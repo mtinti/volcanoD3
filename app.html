@@ -1,5 +1,24 @@
 
 <!DOCTYPE html>
+<script>
+    //wihile experimenting this allows to
+    //load the page and clear the cache
+    //https://stackoverflow.com/questions/6985507/one-time-page-refresh-after-first-page-load?answertab=votes#tab-top
+    window.onload = function() {
+    if(!window.location.hash) {
+        window.location = window.location + '#loaded';
+        window.location.reload();
+    }
+}
+</script>
+
+<script>
+//most of volcano code borrowed from
+//https://bl.ocks.org/mbhall88/3eb7f295657d9fb81f039de6642727e0
+//other inspiration
+//https://bl.ocks.org/timchu90/3da35bad73b69e1736fdb609ac6316e0
+
+</script>
 <html lang="en">
 <head>
     <meta charset="UTF-8">    
@@ -7,7 +26,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">   
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.css" >
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" >
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/b-flash-1.6.1/b-html5-1.6.1/b-print-1.6.1/cr-1.5.2/datatables.min.css"/>
     <link rel="stylesheet" href="volcano.css">
 </head>
 <body >
@@ -64,16 +83,18 @@
                     <div class="tab-pane fade show active" id="home">
                         <div class="card">
                             <div id="chart1"></div>
-                            <button id="resetBtn1">Reset</button>            
+                                      
                         </div>
+                        <button id="resetBtn1">Reset</button>  
                     </div>
 
                     <div class="tab-pane fade" id="profile"> 
                         <br>
                             <div class="card">
                                 <div id="chart2"></div>
-                                <button id="resetBtn2">Reset</button>            
+                                           
                             </div>
+                            <button id="resetBtn2">Reset</button> 
                     </div>
 
 
@@ -81,8 +102,9 @@
                         <br>
                         <div class="card">
                             <div id="chart3"></div>
-                            <button id="resetBtn3">Reset</button>            
+                                     
                         </div>
+                        <button id="resetBtn3">Reset</button>   
                     </div>
                         
                 </div>
@@ -112,21 +134,19 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" ></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" ></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>  
-    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script> 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/b-flash-1.6.1/b-html5-1.6.1/b-print-1.6.1/cr-1.5.2/datatables.min.js"></script>
  
     <script src="volcano.js"></script>
 
 <script>
+    //input file
     var file = "Dataset_min.csv";
     
-    //table_tip = d3.tip()
-    //   .attr('class', 'd3-tip')
-        
-    //    .offset([-10, 0])
-    //    .html(function (d) { d['desc2'] });
-
-    var tabulate = function (data, columns) {
-        var table = d3.select('#table1')//.append('table')
+    //
+    var tabulate = function (data, columns, table_id) {
+        var table = d3.select(table_id)//.append('table')
         var thead = table.append('thead')
         var tbody = table.append('tbody')
    
@@ -155,6 +175,7 @@
         return table;
     }
 
+    //setup the functions to plot the data
     var volcanoPlot_1 = volcanoPlot("1")
         .xAxisLabel('Exp Rank')
         .yAxisLabel('False Discovery Rate')
@@ -192,7 +213,8 @@
         .height(400)
         .width(400);    
 
-    console.log('volcanoPlot_3',volcanoPlot_3)
+    //d3 to read the tabular data
+    //create table and plots
     d3.csv(file, parser, function(error, data){
 
         if (error) console.log(error);
@@ -208,13 +230,16 @@
 
 
         var columns = ['Gene_id', 'srank', 'log_FDR', 'BSF_rank2', 'desc2', 'Gene_acc']
-        tabulate(data, columns)
+        tabulate(data, columns,'#table1')
 
         
         var table = $('#table1').DataTable({
         
         //dom: "Bfrtip",
-        dom: "lrtp",
+        dom: "lrtBp",
+        buttons: [
+             'csv'
+        ],
         pageLength: 10,
         filter: true,
         columns: [
@@ -235,7 +260,7 @@
         }); 
 
 
-
+        
 
         $('#table1 tbody').on('mouseover', 'tr', function () {
 
@@ -255,7 +280,7 @@
                 .style("text-anchor", "left")
                 .text(data['desc2'])
                 .style("font-size", "12px")
-                .style("z-order", 100)
+                
             }
 
             //console.log('click');
@@ -274,6 +299,10 @@
             var selector = '#prot_3_'+gene_acc;
             d3.select(selector).attr("r", "10");
             show_name(selector, 3)
+
+
+            //d3.select("selection_tip_" + 1 + "_"+gene_acc).select(function() 
+            //{ return this.style('visibility', 'visible'); })
 
 
 

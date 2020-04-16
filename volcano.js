@@ -126,23 +126,6 @@ function volcanoPlot(chartId) {
                 })
             
              
-            //var text = svg.selectAll("text")
-            //.data(data).enter().append('text')
-            
-            //var textLabel = text
-            //.attr('x', function(d) { return xScale(d[xColumn]); })
-            //.attr('y', function(d) { return yScale(d[yColumn]); })
-            //.text( function (d) { return "( " + xScale(d[xColumn]) + ", " + yScale(d[yColumn]) +" )"; })
-            //.attr("font-family", "sans-serif")
-            //.attr("visibility", "hidden")
-            //;
-            //.attr("font-family", "sans-serif")
-            //.attr("visibility", "hidden")
-            //.on('mouseenter', function (d){ this.attr("visibility", "")})
-            //;
-            //circles.selectAll(".dot")
-            //    .data(data)
-            //    .enter().append("text").text("My text");
 
             var thresholdLines = svg.append('g')
                 .attr('class', 'thresholdLines');
@@ -169,7 +152,6 @@ function volcanoPlot(chartId) {
                 .data(data).enter()
                 .append("div")
                 .attr('class', 'tooltip')
-                
                 .attr('id', function(i, d) {
                     return "selection_tip_" + chartId + "_"+i['Gene_acc']
                 } );
@@ -184,7 +166,7 @@ function volcanoPlot(chartId) {
                 //.text(d['desc2']);
 
                 tooltip.style('visibility', 'visible')
-                    .style('font-size', '11px')
+                    .style('font-size', '12px')
                     .html(
                         '<strong>' + sampleID + '</strong>: ' + d[sampleID] + '<br/>' +
                         '<strong>' + 'Gene Name' + '</strong>: ' + d['desc2'] + '<br/>' +
